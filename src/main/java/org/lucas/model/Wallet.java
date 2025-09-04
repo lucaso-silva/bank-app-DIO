@@ -12,12 +12,12 @@ import java.util.stream.Stream;
 @ToString
 public abstract class Wallet {
     @Getter
-    private final BankService serviceType;
+    private final BankService service;
 
     protected final List<Money> money;
 
     public Wallet(final BankService serviceType) {
-        this.serviceType = serviceType;
+        this.service = serviceType;
         this.money = new ArrayList<>();
     }
 

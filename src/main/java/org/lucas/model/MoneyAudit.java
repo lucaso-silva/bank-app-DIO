@@ -1,6 +1,7 @@
 package org.lucas.model;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 public record MoneyAudit(
             UUID transactionId,
