@@ -1,20 +1,24 @@
 package org.lucas.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
 import static org.lucas.model.BankService.ACCOUNT;
 
+@Getter
 public class AccountWallet extends Wallet {
-    private final List<String> pix;
 
-    public AccountWallet(final List<String> pix) {
+    private final List<String> accId;
+
+    public AccountWallet(final List<String> accId) {
         super(ACCOUNT);
-        this.pix = pix;
+        this.accId = accId;
     }
 
-    public AccountWallet(final long amount, final BankService serviceType, final List<String> pix) {
-        super(serviceType);
-        this.pix = pix;
+    public AccountWallet(final long amount, final List<String> accId) {
+        super(ACCOUNT);
+        this.accId = accId;
         addMoney(amount, "amount for account creation");
     }
 
