@@ -3,8 +3,13 @@ package org.lucas.repository;
 import org.lucas.exception.AccountIdInUseException;
 import org.lucas.exception.AccountNotFoundException;
 import org.lucas.model.AccountWallet;
+import org.lucas.model.MoneyAudit;
 
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.lucas.repository.CommonsRepository.checkFundsForTransaction;
 
@@ -49,5 +54,16 @@ public class AccountRepository {
                 .filter(a -> a.getAccId().contains(accId))
                 .findFirst()
                 .orElseThrow(() -> new AccountNotFoundException("Account accId number " + accId + " not found."));
+    }
+
+    public List<AccountWallet> list(){
+        return this.accounts;
+    }
+
+    public Map<OffsetDateTime, List<MoneyAudit>> getHistory(final String accId){
+        var wallet = findByAccId(accId);
+        var audit = wallet.getFinancialTransactions();
+        return audit.stream()
+                .collect(Collectors.groupingBy(t -> t.createdAt().truncatedTo(ChronoUnit.SECONDS)));
     }
 }
