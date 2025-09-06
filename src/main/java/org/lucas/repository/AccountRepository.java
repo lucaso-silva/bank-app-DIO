@@ -34,11 +34,11 @@ public class AccountRepository {
         target.addMoney(amount, "Deposit");
     }
 
-    public long withdraw(final String accId, final long amount){
+    public void withdraw(final String accId, final long amount){
         var source = findByAccId(accId);
         checkFundsForTransaction(source, amount);
         source.reduceMoney(amount);
-        return amount;
+//        return amount;
     }
 
     public void transferMoney(final String sourceAccId, final String targetAccId, final long amount){
