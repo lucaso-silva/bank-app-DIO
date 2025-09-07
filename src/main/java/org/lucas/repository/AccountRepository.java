@@ -7,6 +7,7 @@ import org.lucas.model.MoneyAudit;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,13 +16,15 @@ import static org.lucas.repository.CommonsRepository.checkFundsForTransaction;
 
 public class AccountRepository {
 
-    private List<AccountWallet> accounts;
+    private final List<AccountWallet> accounts = new ArrayList<>();
 
     public AccountWallet create(final List<String> accId, final long initialFunds){
-        var accountIdInUse = accounts.stream().flatMap(a -> a.getAccId().stream()).toList();
-        for(var acc : accId) {
-            if(accountIdInUse.contains(acc)) {
-                throw new AccountIdInUseException("Account with id " + accId + " already exists");
+        if(!accounts.isEmpty()){
+            var accountIdInUse = accounts.stream().flatMap(a -> a.getAccId().stream()).toList();
+            for(var acc : accId) {
+                if(accountIdInUse.contains(acc)) {
+                    throw new AccountIdInUseException("Account with id " + accId + " already exists");
+                }
             }
         }
         var newAccount = new AccountWallet(initialFunds, accId);

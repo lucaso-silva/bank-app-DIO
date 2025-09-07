@@ -9,9 +9,7 @@ import java.util.stream.Stream;
 
 import static org.lucas.model.BankService.INVESTMENT;
 
-@ToString
 @Getter
-
 public class InvestmentWallet extends Wallet {
     private final Investment investment;
     private final AccountWallet account;
@@ -28,5 +26,13 @@ public class InvestmentWallet extends Wallet {
         var history = new MoneyAudit(UUID.randomUUID(), getService(), "Returns", OffsetDateTime.now());
         var money = Stream.generate(() -> new Money(history)).limit(amount).toList();
         this.money.addAll(money);
+    }
+
+    @Override
+    public String toString() {
+        return  super.toString() + "InvestmentWallet{" +
+                "investment=" + investment +
+                ", account=" + account +
+                '}';
     }
 }

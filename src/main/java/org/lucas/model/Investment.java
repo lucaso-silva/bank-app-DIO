@@ -7,6 +7,10 @@ public record Investment(
 ) {
     @Override
     public String toString() {
-        return "Investment{" + "id=" + id + ", tax=" + tax + ", initialFunds=" + (initialFunds/100) + "," + (initialFunds%100) + '}';
+        return "Investment{" +
+                "id=" + id +
+                ", tax=" + tax +
+                ", initialFunds=" + (initialFunds/100) + "," + (initialFunds%100) +
+                '}';
     }
 }

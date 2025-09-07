@@ -50,6 +50,9 @@ public abstract class Wallet {
 
     @Override
     public String toString() {
-        return "Wallet{" + "service=" + service + ",money=$" + money.size() / 100 + "," + money.size() % 100 + "}";
+        return "Wallet{" +
+                "service=" + service +
+                ", money=$" + money.size() / 100 + "," + money.size() % 100 +
+                "}";
     }
 }
