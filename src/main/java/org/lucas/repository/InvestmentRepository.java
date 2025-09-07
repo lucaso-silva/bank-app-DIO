@@ -39,20 +39,18 @@ public class InvestmentRepository {
         return wallet;
     }
 
-    public InvestmentWallet deposit(final String accId, final long funds) {
+    public void deposit(final String accId, final long funds) {
         var wallet = findWalletByAccountId(accId);
         wallet.addMoney(wallet.getAccount().reduceMoney(funds), wallet.getService(), "Investment");
-        return wallet;
     }
 
-    public InvestmentWallet withdraw(final String accId, final long funds){
+    public void withdraw(final String accId, final long funds){
         var wallet = findWalletByAccountId(accId);
         checkFundsForTransaction(wallet, funds);
         wallet.getAccount().addMoney(wallet.reduceMoney(funds), wallet.getService(), "Investment withdrawal");
         if(wallet.getFunds()==0){
             wallets.remove(wallet);
         }
-        return wallet;
     }
 
     public void updateAmount(){

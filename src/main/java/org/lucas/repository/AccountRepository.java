@@ -41,7 +41,6 @@ public class AccountRepository {
         var source = findByAccId(accId);
         checkFundsForTransaction(source, amount);
         source.reduceMoney(amount);
-//        return amount;
     }
 
     public void transferMoney(final String sourceAccId, final String targetAccId, final long amount){
