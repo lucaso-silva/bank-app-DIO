@@ -2,15 +2,17 @@ package org.lucas;
 
 import org.lucas.exception.AccountNotFoundException;
 import org.lucas.exception.NoEnoughFundsException;
+import org.lucas.exception.WalletNotFoundException;
 import org.lucas.model.AccountWallet;
 import org.lucas.repository.AccountRepository;
 import org.lucas.repository.InvestmentRepository;
 
-import java.time.temporal.ChronoUnit;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import static java.time.format.DateTimeFormatter.*;
 import static java.time.temporal.ChronoUnit.*;
 
 public class Main {
@@ -29,7 +31,7 @@ public class Main {
             System.out.println("""
                     \t1. Create a new account
                     \t2. Create a new investment
-                    \t3. Initiate an investment
+                    \t3. Create an investment wallet
                     \t4. Deposit into account
                     \t5. Withdraw from account
                     \t6. Transfer between accounts
@@ -44,50 +46,27 @@ public class Main {
             var option = in.nextInt();
 
             switch(option){
-                case 1:
-                    createAccount();
-                    break;
-                case 2:
-                    createInvestment();
-                    break;
-                case 3:
-                    createInvestmentWallet();
-                    break;
-                case 4:
-                    deposit();
-                    break;
-                case 5:
-                    withdraw();
-                    break;
-                case 6:
-                    transferBetweenAccounts();
-                    break;
-                case 7:
-                    incInvestment();
-                    break;
-                case 8:
-                    rescueInvestment();
-                    break;
-                case 9:
-                    accRepository.list().forEach(System.out::println);
-                    break;
-                case 10:
-                    invRepository.list().forEach(System.out::println);
-                    break;
-                case 11:
-                    invRepository.listWallets().forEach(System.out::println);
-                    break;
-                case 12:
+                case 1 -> createAccount();
+                case 2 -> createInvestment();
+                case 3 -> createInvestmentWallet();
+                case 4 -> deposit();
+                case 5 -> withdraw();
+                case 6 -> transferBetweenAccounts();
+                case 7 -> incInvestment();
+                case 8 -> rescueInvestment();
+                case 9 -> accRepository.list().forEach(System.out::println);
+                case 10 -> invRepository.list().forEach(System.out::println);
+                case 11 -> invRepository.listWallets().forEach(System.out::println);
+                case 12 -> {
                     invRepository.updateAmount();
                     System.out.println("Investments updated!");
-                    break;
-                case 13:
-
-                case 14:
+                }
+                case 13 -> checkHistory();
+                case 14 -> {
                     System.out.println("Finishing...");
                     System.exit(0);
-                default:
-                    System.out.println("Invalid option!");
+                }
+                default -> System.out.println("Invalid option!");
             }
         }
     }
@@ -171,7 +150,7 @@ public class Main {
 
         try{
             invRepository.deposit(accId, amount);
-        }catch (AccountNotFoundException e){
+        }catch (WalletNotFoundException | AccountNotFoundException e){
             System.out.println(e.getMessage());
         }
     }
@@ -196,10 +175,13 @@ public class Main {
         AccountWallet wallet;
 
         try{
-            wallet = accRepository.findByAccId(accId);
-            var audit = wallet.getFinancialTransactions();
-            var group = audit.stream()
-                    .collect(Collectors.groupingBy(t -> t.createdAt().truncatedTo(SECONDS)));
+            var sortedHistory = accRepository.getHistory(accId);
+            sortedHistory.forEach((k,v)-> {
+                System.out.println(k.format(ISO_DATE_TIME));
+                System.out.println(v.getFirst().transactionId());
+                System.out.println(v.getFirst().description());
+                System.out.println("$" + (v.size()/100) + "," + (v.size()%100));
+            });
 
         }catch (AccountNotFoundException e){
             System.out.println(e.getMessage());
